@@ -1,0 +1,176 @@
+{
+ "config": {
+  "env": "sis",
+  "num_nodes": null,
+  "grid_size": 6,
+  "deadline": 2,
+  "graph_type": "ring",
+  "random_edge_prob": 0.2,
+  "infection_rate": 0.5,
+  "recovery_rate": 0.3,
+  "intervention_effect": 0.8,
+  "intervention_cost": 0.2,
+  "num_actions": 2,
+  "initial_infection_prob": 0.2,
+  "gamma": 0.7,
+  "kappas": [
+   0,
+   1,
+   2
+  ],
+  "iterations": 2000,
+  "horizon": 50,
+  "critic_h": 5.0,
+  "critic_t0": 10.0,
+  "actor_eta": 2.0,
+  "warm_start": false,
+  "policy_radius": 0,
+  "runs": 1,
+  "seed": 0,
+  "eval_episodes": 100,
+  "rollout_steps": 100,
+  "num_plots": 10,
+  "aloha_send_prob": 0.5,
+  "no_baselines": false,
+  "no_snapshots": false,
+  "output_dir": "example_run_sis/complexity",
+  "log_every": 0,
+  "complexity": false,
+  "complexity_sizes": [
+   10,
+   20,
+   40,
+   80,
+   160
+  ],
+  "complexity_kappas": [
+   0,
+   1,
+   2,
+   3
+  ],
+  "complexity_iters": 8,
+  "complexity_fixed_kappa": 1,
+  "complexity_fixed_n": null,
+  "only_complexity": true
+ },
+ "complexity": {
+  "vs_n": [
+   {
+    "n": 10,
+    "kappa": 1,
+    "f_kappa": 3,
+    "t_sim": 0.007770605625005089,
+    "t_critic": 0.00014697937500329772,
+    "t_actor": 0.00010761187500207825,
+    "t_total": 0.008025196875010465,
+    "q_entries_max": 17.75,
+    "q_bound": 64.0
+   },
+   {
+    "n": 20,
+    "kappa": 1,
+    "f_kappa": 3,
+    "t_sim": 0.00793592687499256,
+    "t_critic": 0.0007868347500092909,
+    "t_actor": 0.00015825675000513684,
+    "t_total": 0.008881018375006988,
+    "q_entries_max": 30.625,
+    "q_bound": 64.0
+   },
+   {
+    "n": 40,
+    "kappa": 1,
+    "f_kappa": 3,
+    "t_sim": 0.0084468318750055,
+    "t_critic": 0.001046249624998552,
+    "t_actor": 0.00025811924999885605,
+    "t_total": 0.009751200750002909,
+    "q_entries_max": 34.25,
+    "q_bound": 64.0
+   },
+   {
+    "n": 80,
+    "kappa": 1,
+    "f_kappa": 3,
+    "t_sim": 0.010231416250000791,
+    "t_critic": 0.0015851367500090419,
+    "t_actor": 0.001490779124992514,
+    "t_total": 0.013307332125002347,
+    "q_entries_max": 34.625,
+    "q_bound": 64.0
+   },
+   {
+    "n": 160,
+    "kappa": 1,
+    "f_kappa": 3,
+    "t_sim": 0.013318222124993895,
+    "t_critic": 0.004152442125004541,
+    "t_actor": 0.0030259442499911415,
+    "t_total": 0.020496608499989577,
+    "q_entries_max": 35.75,
+    "q_bound": 64.0
+   }
+  ],
+  "vs_kappa": [
+   {
+    "n": 40,
+    "kappa": 0,
+    "f_kappa": 1,
+    "t_sim": 0.008295694250016084,
+    "t_critic": 0.0014825889999912079,
+    "t_actor": 0.0007661444999911282,
+    "t_total": 0.01054442774999842,
+    "q_entries_max": 4.0,
+    "q_bound": 4.0
+   },
+   {
+    "n": 40,
+    "kappa": 1,
+    "f_kappa": 3,
+    "t_sim": 0.008532778875000702,
+    "t_critic": 0.0010608939999983136,
+    "t_actor": 0.001288835875001837,
+    "t_total": 0.010882508750000852,
+    "q_entries_max": 34.25,
+    "q_bound": 64.0
+   },
+   {
+    "n": 40,
+    "kappa": 2,
+    "f_kappa": 5,
+    "t_sim": 0.00827850162499999,
+    "t_critic": 0.001221256125013781,
+    "t_actor": 0.0012803486249950424,
+    "t_total": 0.010780106375008813,
+    "q_entries_max": 47.875,
+    "q_bound": 1024.0
+   },
+   {
+    "n": 40,
+    "kappa": 3,
+    "f_kappa": 7,
+    "t_sim": 0.009475941500014073,
+    "t_critic": 0.0006896413749899466,
+    "t_actor": 0.0007758714999965832,
+    "t_total": 0.010941454375000603,
+    "q_entries_max": 50.0,
+    "q_bound": 16384.0
+   }
+  ],
+  "fixed_kappa": 1,
+  "fixed_n": 40,
+  "slopes_vs_n": {
+   "t_total": 0.32889773868669964,
+   "t_sim": 0.19211403385622608,
+   "t_critic": 1.0651023594697884,
+   "t_actor": 1.286268001029911
+  },
+  "f_kappa": [
+   1,
+   3,
+   5,
+   7
+  ]
+ }
+}

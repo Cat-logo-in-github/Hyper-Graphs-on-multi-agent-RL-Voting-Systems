@@ -347,6 +347,7 @@ class SISGraphEnv:
         self._has_state = False
         self._episode_over = False
         self._cumulative_reward = 0.0
+        self._discounted_return = 0.0
         self._last_step: Optional[Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]] = None
         self._fig = None
         self._ax = None
@@ -442,6 +443,7 @@ class SISGraphEnv:
         self._has_state = True
         self._episode_over = False
         self._cumulative_reward = 0.0
+        self._discounted_return = 0.0
         self._last_step = None
         info = self.get_metrics()
         info["state"] = self.get_state()
@@ -498,6 +500,8 @@ class SISGraphEnv:
         s_next = (u < p_infected).astype(np.int8)
 
         self._state = s_next
+        # J(theta) = E sum_t gamma^t r(s_t, a_t): accumulate with the OLD t.
+        self._discounted_return += (self.gamma ** self._t) * float(rewards.mean())
         self._t += 1
         self._cumulative_reward += float(rewards.mean())
         self._last_step = (s.copy(), a.copy(), rewards.copy(), s_next.copy())
@@ -590,6 +594,8 @@ class SISGraphEnv:
             "fraction_infected": k / n,
             "cumulative_reward": self._cumulative_reward,  # sum_t r(s_t, a_t), undiscounted
             "average_reward": self._cumulative_reward / self._t if self._t > 0 else 0.0,
+            # sum_t gamma^t r(s_t, a_t): the paper's objective J (eq. 2), one sample path
+            "discounted_return": self._discounted_return,
         }
 
     # ------------------------------------------------------------------ #

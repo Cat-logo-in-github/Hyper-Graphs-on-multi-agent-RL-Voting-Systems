@@ -1,0 +1,13 @@
+env=line n=8 |S|=2 |A|=2 gamma=0.7 | M=3000 T=40 kappas=[0, 1, 2, 3, 4] runs=2
+
+policy                 | J (final, mean±sem)    | gap to optimum
+benchmark:uniform_random | 0.3037 ± 0.0044
+benchmark:optimal_all_ones | 0.4167 ± 0.0000
+SAC kappa=0            | 0.3029 ± 0.0030        | 0.1138   [27.6s, f(κ)=1]
+SAC kappa=1            | 0.3951 ± 0.0044        | 0.0216   [26.0s, f(κ)=3]
+SAC kappa=2            | 0.4073 ± 0.0008        | 0.0094   [25.5s, f(κ)=5]
+SAC kappa=3            | 0.3992 ± 0.0114        | 0.0174   [26.1s, f(κ)=7]
+SAC kappa=4            | 0.3863 ± 0.0095        | 0.0303   [26.6s, f(κ)=8]
+optimal J* = 0.4167
+
+results.json and plots written to variations/line_warm/

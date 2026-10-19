@@ -135,23 +135,31 @@ class ScalableActorCritic:
 
     # ---- one outer iteration (Algorithm 1, lines 2-12) -------------------- #
     def iterate(self) -> Dict[str, float]:
-        env, n, T, gamma = self.env, self.n, self.T, self.gamma
+        """Sample a trajectory under the current policy (line 2, 5), then run critic + actor on it."""
+        env, n, T = self.env, self.n, self.T
         t_start = time.perf_counter()
-
-        # trajectory under the current (fixed) policy: states s(0..T), actions a(0..T), rewards r(0..T-1)
         _, info = env.reset(seed=int(self.rng.integers(2 ** 31 - 1)))
-        S = np.zeros((T + 1, n), dtype=np.int64)
-        Act = np.zeros((T + 1, n), dtype=np.int64)
-        R = np.zeros((T, n))
+        S = np.zeros((T + 1, n), dtype=np.int64)       # s(0..T)
+        Act = np.zeros((T + 1, n), dtype=np.int64)     # a(0..T)
+        R = np.zeros((T, n))                           # r_i(0..T-1)
         S[0] = info["state"]
         for t in range(T):
             Act[t] = sample_actions(self.theta, S[t], self.rng, self.enc)
             _, r, _, _, info = env.step(Act[t])
             R[t], S[t + 1] = r, info["state"]
         Act[T] = sample_actions(self.theta, S[T], self.rng, self.enc)
-        t_sim = time.perf_counter()
+        t_sim = time.perf_counter() - t_start
+        self.last_trajectory = (S, Act, R)
+        rec = self.update(S, Act, R)
+        rec["t_sim"] = t_sim
+        return rec
 
-        # critic: TD(0) on the truncated Q-function, Qhat^0 = 0
+    def update(self, S: np.ndarray, Act: np.ndarray, R: np.ndarray) -> Dict[str, float]:
+        """Critic (lines 3-9) and actor (lines 10-12) of Algorithm 1 on a given trajectory."""
+        n, T, gamma = self.n, self.T, self.gamma
+        t_a = time.perf_counter()
+
+        # critic: TD(0) on the truncated Q-function, Qhat^0 = 0 (line 3), update of line 7
         Z = S * self.A + Act
         if not (self.warm_start and self.m > 0):
             self.q_tables = [dict() for _ in range(n)]
@@ -163,26 +171,26 @@ class ScalableActorCritic:
                 k0 = keys[t - 1]
                 Q[k0] = (1.0 - alpha) * Q.get(k0, 0.0) + alpha * (ri[t - 1] + gamma * Q.get(keys[t], 0.0))
             q_vals[i] = [Q.get(k, 0.0) for k in keys]
-        t_critic = time.perf_counter()
+        t_b = time.perf_counter()
 
-        # actor: g_i = sum_t gamma^t (1/n) sum_{j in N_i^kappa} Qhat_j(t) * grad log zeta_i(a_i(t)|s_i(t))
+        # actor: g_i = sum_t gamma^t (1/n) sum_{j in N_i^kappa} Qhat_j(t) * grad log zeta_i(a_i(t)|s_i(t))  (line 11)
         CTX = self.enc(S)                                                    # policy contexts (T+1, n)
         probs = softmax_rows(self.theta[np.arange(n)[None, :], CTX])      # (T+1, n, A)
         w = (self.nmat @ q_vals) / n                                        # (n, T+1)
         coeff = (gamma ** np.arange(T + 1))[None, :] * w
-        delta = np.eye(self.A)[Act] - probs
+        delta = np.eye(self.A)[Act] - probs                                 # grad of log-softmax
         grad = np.zeros_like(self.theta)
         np.add.at(grad, (np.broadcast_to(np.arange(n), S.shape), CTX), coeff.T[:, :, None] * delta)
-        eta_m = self.eta / np.sqrt(self.m + 1)
+        eta_m = self.eta / np.sqrt(self.m + 1)                              # line 12
         self.theta += eta_m * grad
         self.m += 1
-        t_actor = time.perf_counter()
+        t_c = time.perf_counter()
 
         return {
             "J": float(((gamma ** np.arange(T)) * R.mean(axis=1)).sum()),  # sampled discounted return
             "grad_sq": float((grad ** 2).sum()),
             "eta": float(eta_m),
-            "t_sim": t_sim - t_start, "t_critic": t_critic - t_sim, "t_actor": t_actor - t_critic,
+            "t_sim": 0.0, "t_critic": t_b - t_a, "t_actor": t_c - t_b,
             "q_entries": float(sum(len(q) for q in self.q_tables)),
             "q_entries_max": float(max(len(q) for q in self.q_tables)),
         }

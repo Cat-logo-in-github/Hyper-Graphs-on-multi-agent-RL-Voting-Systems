@@ -1,0 +1,26 @@
+CHECK 1  code == literal transcription of Algorithm 1 (lines 3-12)
+   kappa=0 policy_radius=0: max|theta_code - theta_pseudocode| = 0.00e+00  PASS
+   kappa=1 policy_radius=0: max|theta_code - theta_pseudocode| = 0.00e+00  PASS
+   kappa=2 policy_radius=0: max|theta_code - theta_pseudocode| = 0.00e+00  PASS
+   kappa=0 policy_radius=1: max|theta_code - theta_pseudocode| = 2.78e-17  PASS
+   kappa=1 policy_radius=1: max|theta_code - theta_pseudocode| = 5.55e-17  PASS
+   kappa=2 policy_radius=1: max|theta_code - theta_pseudocode| = 0.00e+00  PASS
+
+   computing exact Q-functions (8-node ring, 256 states x 256 joint actions) ...
+
+CHECK 2  Lemma 2(a): exponential decay of Q_i in the distance to the perturbed nodes
+   kappa=0: sup dependence outside N^kappa = 1.48814  <= bound 2.80000  PASS
+   kappa=1: sup dependence outside N^kappa = 0.67179  <= bound 1.96000  PASS
+   kappa=2: sup dependence outside N^kappa = 0.23006  <= bound 1.37200  PASS
+   kappa=3: sup dependence outside N^kappa = 0.06241  <= bound 0.96040  PASS
+   kappa=4: sup dependence outside N^kappa = 0.00000  <= bound 0.67228  PASS
+   fitted decay rate rho ~ 0.347  (paper: rho <= gamma = 0.7)
+
+CHECK 3  Theorem 5 / Lemma 3: critic error of Qhat^T vs exact Q (single run, T=20000)
+   kappa=0 (f=1): mean|err| = 0.0213, p95 = 0.0570, max = 0.3236, table entries <= 2
+   kappa=1 (f=3): mean|err| = 0.6136, p95 = 1.1968, max = 2.7989, table entries <= 8
+   kappa=2 (f=5): mean|err| = 1.5811, p95 = 2.5186, max = 3.1318, table entries <= 32
+   kappa=3 (f=7): mean|err| = 2.2657, p95 = 2.9179, max = 3.2134, table entries <= 128
+   kappa=4 (f=8): mean|err| = 2.4845, p95 = 3.0036, max = 3.2143, table entries <= 244
+
+OVERALL (checks 1-2 are pass/fail; check 3 is reported): PASS

@@ -126,6 +126,11 @@ def test_sac_policy_radius1_on_sis():
     assert np.isfinite(v["mean"])
 
 
+def test_code_equals_literal_algorithm1():
+    import verify_paper
+    assert all(r["pass"] for r in verify_paper.check_algorithm_identity())
+
+
 if __name__ == "__main__":
     tests = [(k, v) for k, v in sorted(globals().items()) if k.startswith("test_") and callable(v)]
     bad = 0

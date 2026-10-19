@@ -1,0 +1,16 @@
+env=sis n=20 |S|=2 |A|=2 gamma=0.7 | M=1000 T=40 kappas=[0, 1, 2] runs=2
+
+policy                 | J (final, mean±sem)   
+benchmark:uniform_random | 2.2131 ± 0.0393
+benchmark:never        | 2.2605 ± 0.0449
+benchmark:always       | 2.1504 ± 0.0287
+benchmark:own_state[S->0,I->0] | 2.2605 ± 0.0449
+benchmark:own_state[S->0,I->1] | 2.0459 ± 0.0539
+benchmark:own_state[S->1,I->0] | 2.2537 ± 0.0229
+benchmark:own_state[S->1,I->1] | 2.1504 ± 0.0287
+benchmark:local_heuristic(sees neighbours) | 2.5752 ± 0.0400
+SAC kappa=0            | 2.2631 ± 0.0432   [3.9s, f(κ)=1]
+SAC kappa=1            | 2.2758 ± 0.0119   [4.0s, f(κ)=3]
+SAC kappa=2            | 2.2894 ± 0.0136   [4.0s, f(κ)=5]
+
+results.json and plots written to variations/ring_r1_cold_h100/

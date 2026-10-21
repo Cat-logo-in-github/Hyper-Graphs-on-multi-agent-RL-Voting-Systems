@@ -77,8 +77,8 @@ def build_parser() -> argparse.ArgumentParser:
     e.add_argument("--deadline", type=int, default=2, help="wireless: packet deadline d_i")
     e.add_argument("--graph-type", choices=GRAPH_TYPES, default="ring", help="sis topology")
     e.add_argument("--random-edge-prob", type=float, default=0.2)
-    e.add_argument("--infection-rate", type=float, default=0.5, help="sis: beta(0)")
-    e.add_argument("--recovery-rate", type=float, default=0.3, help="sis: delta")
+    e.add_argument("--infection-rate", type=float, default=0.15, help="sis: beta(0)")
+    e.add_argument("--recovery-rate", type=float, default=0.25, help="sis: delta")
     e.add_argument("--intervention-effect", type=float, default=0.8, help="sis: beta reduction at strongest action")
     e.add_argument("--intervention-cost", type=float, default=0.2, help="sis: cost of strongest action")
     e.add_argument("--num-actions", type=int, default=2, help="sis: |A_i|")
@@ -93,7 +93,7 @@ def build_parser() -> argparse.ArgumentParser:
     a.add_argument("--actor-eta", type=float, default=2.0, help="actor step eta_m = eta/sqrt(m+1)")
     a.add_argument("--warm-start", action="store_true",
                    help="initialise each critic from the previous iteration (extension named in paper Sec. 3.2; default: off = Algorithm 1)")
-    a.add_argument("--policy-radius", type=int, default=0,
+    a.add_argument("--policy-radius", type=int, default=1,
                    help="0: zeta_i(a_i|s_i) (paper base model); 1: zeta_i(a_i|s_{N_i}) (paper Remark 1)")
     a.add_argument("--runs", type=int, default=1, help="independent training runs per kappa")
     a.add_argument("--seed", type=int, default=0)
